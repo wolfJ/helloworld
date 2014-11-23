@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="org.wolf.carmanager.persist.CarMapper">
+
+    <select id="selectCars"
+            resultType="org.wolf.carmanager.model.CarPO">
+    select *
+     from car
+    </select>
+    <select id="selectAll" resultType="org.wolf.carmanager.model.CarPO">
+        select * from car;
+    </select>
+
+    <insert id="adCar" parameterType="org.wolf.carmanager.model.CarPO">
+        insert into car(chePai, cheZhu, dianHua, chePingPai, cheXinHao, faDongJi, cheJiaHao,
+        dengJiRQ, baoXianRQ, shenFengZheng, diZhi, remark )
+        values (#{chePai,jdbcType=VARCHAR}, #{cheZhu,jdbcType=VARCHAR}, #{dianHua,jdbcType=VARCHAR},
+            #{chePingPai,jdbcType=VARCHAR}, #{cheXinHao,jdbcType=VARCHAR}, #{faDongJi,jdbcType=VARCHAR}, #{cheJiaHao,jdbcType=VARCHAR}
+        , #{dengJiRQ,jdbcType=TIMESTAMP}, #{baoXianRQ,jdbcType=TIMESTAMP}, #{shenFengZheng,jdbcType=VARCHAR},
+        #{diZhi,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR} )
+    </insert>
+
+    <insert id="insertBatch" parameterType="list">
+        insert into car (chePai, cheZhu, dianHua, chePingPai, cheXinHao, faDongJi, cheJiaHao,
+        dengJiRQ, baoXianRQ, shenFengZheng, diZhi, remark )
+        values
+        <foreach collection="list" item="poi" index="index" separator=",">
+            (#{poi.chePai,jdbcType=VARCHAR}, #{poi.cheZhu,jdbcType=VARCHAR}, #{poi.dianHua,jdbcType=VARCHAR},
+            #{poi.chePingPai,jdbcType=VARCHAR}, #{poi.cheXinHao,jdbcType=VARCHAR}, #{poi.faDongJi,jdbcType=VARCHAR},
+            #{poi.cheJiaHao,jdbcType=VARCHAR}, #{poi.dengJiRQ,jdbcType=TIMESTAMP}, #{poi.baoXianRQ,jdbcType=TIMESTAMP},
+            #{poi.shenFengZheng,jdbcType=VARCHAR},
+            #{poi.diZhi,jdbcType=VARCHAR}, #{poi.remark,jdbcType=VARCHAR} )
+        </foreach>
+    </insert>
+
+</mapper>

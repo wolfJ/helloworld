@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.wolf.carmanager.persist.ImportMapper">
+    <insert id="insert">
+        insert into importlog(importFileName,importTime) values
+         (#{importFileName,jdbcType=VARCHAR},#{importTime,jdbcType=TIMESTAMP})
+    </insert>
+
+    <select id="selectAll" resultType="org.wolf.carmanager.model.ImportPO">
+        select * from importlog
+    </select>
+</mapper>

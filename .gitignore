@@ -8,6 +8,27 @@
 
 # Build results
 
+# maven ignore
+target/
+*.jar
+*.war
+*.zip
+*.tar
+*.tar.gz
+
+# eclipse ignore
+.settings/
+.project
+.classpath
+
+# idea ignore
+.idea/
+*.ipr
+*.iml
+*.iws
+
+classes/
+
 [Dd]ebug/
 [Rr]elease/
 x64/
