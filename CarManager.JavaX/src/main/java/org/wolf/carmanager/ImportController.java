@@ -8,6 +8,7 @@ import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -54,26 +55,47 @@ public class ImportController {
 
     private Date end;
 
+    @RequestMapping(value = "/queryx", produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<CarPO> queryXPos() {
+        List<CarPO> list = new ArrayList<CarPO>();
+        list.add(getCarPO());
+        list.add(getCarPO());
+        return list;
+    }
+
+    @RequestMapping(value = "/query", produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<CarPO> queryPos(@RequestParam PageQueryParam<CarPO> queryParam) {
+        List<CarPO> list = new ArrayList<CarPO>();
+        list.add(getCarPO());
+        list.add(getCarPO());
+        return list;
+    }
+
     @RequestMapping(value = "/hello")
     public
     @ResponseBody
     String hello(@RequestParam("name") String name) {
         try {
 
-            CarPO po = new CarPO();
-            po.setChePai("chepai");
-            po.setCheJiaHao("");
-            po.setChePingPai("");
-            po.setCheZhu("");
-            po.setDianHua("");
-            po.setDiZhi("");
-            po.setBaoXianRQ(new Date());
-            po.setDengJiRQ(new Date());
+            CarPO po = getCarPO();
             mapper.adCar(po);
         } catch (Exception e) {
             e.printStackTrace();
         }
         return "hi!";
+    }
+
+    private CarPO getCarPO() {
+        CarPO po = new CarPO();
+        po.setChePai("chepai");
+        po.setCheJiaHao("");
+        po.setChePingPai("");
+        po.setCheZhu("");
+        po.setDianHua("");
+        po.setDiZhi("");
+        po.setBaoXianRQ(new Date());
+        po.setDengJiRQ(new Date());
+        return po;
     }
 
     @RequestMapping(value = "/helloreq")
