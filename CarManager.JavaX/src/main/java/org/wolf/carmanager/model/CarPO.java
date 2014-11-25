@@ -8,6 +8,22 @@ import java.util.Date;
  */
 public class CarPO implements Serializable {
     private static final long serialVersionUID = -4867214823493085140L;
+    private int id;
+    private String chePai = "";
+    private String cheZhu = "";
+    private String dianHua = "";
+    private String chePingPai = "";
+    private String cheXinHao = "";
+    private String faDongJi = "";
+    private String cheJiaHao = "";
+    private Date dengJiRQ;
+    private Date baoXianRQ;
+    private String shenFengZheng = "";
+    private String diZhi = "";
+//    private String  remark;
+//    private Double  bakA;
+//    private String  bakB;
+
 
     public int getId() {
         return id;
@@ -105,29 +121,13 @@ public class CarPO implements Serializable {
         this.diZhi = diZhi;
     }
 
-    public String getRemark() {
-        return remark;
-    }
-
-    public void setRemark(String remark) {
-        this.remark = remark;
-    }
-
-    private int id;
-    private String  chePai;
-    private String  cheZhu;
-    private String  dianHua;
-    private String  chePingPai;
-    private String  cheXinHao;
-    private String  faDongJi;
-    private String  cheJiaHao;
-    private Date  dengJiRQ;
-    private Date  baoXianRQ;
-    private String  shenFengZheng;
-    private String  diZhi;
-    private String  remark;
-//    private Double  bakA;
-//    private String  bakB;
+//    public String getRemark() {
+//        return remark;
+//    }
+//
+//    public void setRemark(String remark) {
+//        this.remark = remark;
+//    }
 
 
 }

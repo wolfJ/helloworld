@@ -20,7 +20,7 @@ public class PaginationSupport<E> {
 
     private int pageSize = PAGE_SIZE;
 
-    private List<E> items;
+    private List<E> data;
 
     private int totalCount;
 
@@ -28,33 +28,61 @@ public class PaginationSupport<E> {
 
     private int startIndex = 0;
 
+    private int draw;
+    private int recordsTotal;
+    private int recordsFiltered;
+
+    public void setDraw(int draw) {
+        this.draw = draw;
+    }
+
+    public void setRecordsTotal(int recordsTotal) {
+        this.recordsTotal = recordsTotal;
+    }
+
+    public void setRecordsFiltered(int recordsFiltered) {
+        this.recordsFiltered = recordsFiltered;
+    }
+
+    public int getDraw() {
+        return startIndex;
+    }
+
+    public int getRecordsTotal() {
+        return totalCount;
+    }
+
+    public int getRecordsFiltered() {
+        return pageSize;
+    }
+
     public PaginationSupport(List<E> items, int totalCount) {
         setPageSize(PAGE_SIZE);
         setTotalCount(totalCount);
-        setItems(items);
+        setData(items);
         setStartIndex(0);
     }
 
     public PaginationSupport(List<E> items, int totalCount, int startIndex) {
         setPageSize(PAGE_SIZE);
         setTotalCount(totalCount);
-        setItems(items);
+        setData(items);
         setStartIndex(startIndex);
     }
 
     public PaginationSupport(List<E> items, int totalCount, int pageSize, int startIndex) {
         setPageSize(pageSize);
         setTotalCount(totalCount);
-        setItems(items);
+        setData(items);
         setStartIndex(startIndex);
     }
 
-    public List<E> getItems() {
-        return items;
+    public List<E> getData() {
+        return data;
     }
 
-    public void setItems(List<E> items) {
-        this.items = items;
+    public void setData(List<E> items) {
+        this.data = items;
     }
 
     public int getPageSize() {
@@ -127,8 +155,8 @@ public class PaginationSupport<E> {
     public String toString() {
         final StringBuilder sb = new StringBuilder("{");
         sb.append("pageSize=").append(pageSize);
-        sb.append(", items=").append(items);
-        sb.append(", recordsTotal=").append(totalCount);
+        sb.append(", data=").append(data);
+        sb.append(", totalCount=").append(totalCount);
         sb.append(", indexes=").append(Arrays.toString(indexes));
         sb.append(", startIndex=").append(startIndex);
         sb.append('}');

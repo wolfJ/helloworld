@@ -1,5 +1,6 @@
 package org.wolf.carmanager;
 
+import com.alibaba.fastjson.JSON;
 import jxl.Cell;
 import jxl.DateCell;
 import jxl.Sheet;
@@ -60,7 +61,6 @@ public class ImportController {
     @ResponseBody
     String hello(@RequestParam("name") String name) {
         try {
-
             CarPO po = getCarPO();
             mapper.adCar(po);
         } catch (Exception e) {
@@ -69,39 +69,41 @@ public class ImportController {
         return "hi!";
     }
 
-    private CarPO getCarPO() {
-        CarPO po = new CarPO();
-        po.setChePai("chepai");
-        po.setCheJiaHao("");
-        po.setChePingPai("");
-        po.setCheZhu("");
-        po.setDianHua("");
-        po.setDiZhi("");
-        po.setBaoXianRQ(new Date());
-        po.setDengJiRQ(new Date());
-        return po;
-    }
-
     @RequestMapping(value = "/helloreq.do")
     public
     @ResponseBody
     String hello(HttpServletRequest req) {
-
         return "hi!";
     }
 
-    @RequestMapping(value="/query.do")
-    public @ResponseBody PaginationSupport query() {
+    @RequestMapping(value = "/queryx.do", produces = MediaType.APPLICATION_JSON_VALUE)
+    public
+    @ResponseBody
+    String queryx() {
         List<CarPO> list = new ArrayList<CarPO>();
         list.add(getCarPO());
         list.add(getCarPO());
+        PageQueryResult result = new PageQueryResult();
+        result.setData(list);
+        result.setDraw(1);
+        result.setRecordsFiltered(5);
+        result.setRecordsTotal(2);
 
-        PageQueryParam<CarPO> param = new PageQueryParam<CarPO>();
+        return JSON.toJSONString(result);
+    }
+
+    @RequestMapping(value = "/query.do")
+    public
+    @ResponseBody
+    List<CarPO> query() { //
+        List<CarPO> list = new ArrayList<CarPO>();
+        list.add(getCarPO());
+        list.add(getCarPO());
+//        PageQueryParam<CarPO> param = new PageQueryParam<CarPO>();
 //         list = this.mapper.selectCars(param);
 //        int totalCount = this.mapper.countCars(param);
-
-        return new PaginationSupport(list, 2,10 ,0 );
-//        return list;
+//        return new PaginationSupport(list, 2,10 ,0 );
+        return list;
     }
 
     @RequestMapping(value = "/upload.do", method = RequestMethod.POST)
@@ -267,5 +269,38 @@ public class ImportController {
         file.transferTo(convFile);
         return convFile;
     }
+
+
+    private CarPO getCarPO() {
+        CarPO po = new CarPO();
+        po.setChePai("chepai");
+        po.setCheJiaHao("ss");
+        po.setChePingPai("aaa");
+        po.setCheZhu("在大在");
+        po.setDianHua(" 工工 ");
+        po.setDiZhi("aaaa");
+        po.setBaoXianRQ(new Date());
+        po.setDengJiRQ(new Date());
+        return po;
+    }
+
+
+    public class TmpPO{
+        public String first_name;
+        public String  last_name;
+        public String  position;
+        public String  office;
+        public String  start_date;
+        public String  salary;
+
+        public  TmpPO(){
+            first_name = "Airi";
+            last_name = "Satou";
+            position = "Accountant";
+            start_date = "28th Nov 08";
+            salary = "$162,700";
+        }
+    }
+
 
 }
