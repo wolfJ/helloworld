@@ -3,34 +3,88 @@
 
 <mapper namespace="org.wolf.carmanager.persist.CarMapper">
 
+
+    <sql id="columns">
+        id,
+            chePai ,
+            cheZhu,
+            dianHua ,
+            chePingPai,
+            cheXinHao,
+            faDongJi ,
+            cheJiaHao,
+        dengJiRQ,
+        baoXianRQ,
+        shenFengZheng,
+        diZhi
+    </sql>
+
     <select id="selectCars" parameterType="org.wolf.carmanager.PageQueryParam"
             resultType="org.wolf.carmanager.model.CarPO">
-        <!--<bind name="bind_name" value="'%' + _parameter.getName() + '%'" />-->
-        <!--<bind name="bind_description" value="'%' + _parameter.getDescription() + '%'" />-->
+        <bind name="bind_chePai" value="'%' + param.getChePai() + '%'"/>
+        <bind name="bind_cheZhu" value="'%' + param.getCheZhu() + '%'"/>
+        <bind name="bind_dianHua" value="'%' + param.getDianHua() + '%'"/>
+        <bind name="bind_chePingPai" value="'%' + param.getChePingPai() + '%'"/>
+        <bind name="bind_cheXinHao" value="'%' + param.getCheXinHao() + '%'"/>
+        <bind name="bind_faDongJi" value="'%' + param.getFaDongJi() + '%'"/>
+        <bind name="bind_cheJiaHao" value="'%' + param.getCheJiaHao() + '%'"/>
+        <bind name="bind_shenFengZheng" value="'%' + param.getShenFengZheng() + '%'"/>
+        <bind name="bind_diZhi" value="'%' + param.getDiZhi() + '%'"/>
+        <bind name="bind_dengJiRQS" value="'%' + param.getDengJiRQS() + '%'"/>
+        <bind name="bind_dengJiRQE" value="'%' + param.getDengJiRQE() + '%'"/>
+        <bind name="bind_baoXianRQS" value="'%' + param.getBaoXianRQS() + '%'"/>
+        <bind name="bind_baoXianRQE" value="'%' + param.getBaoXianRQE() + '%'"/>
 
-    select *
-     from car
-        <!--<where>-->
-            <!--<if test="name != null and name != ''">name LIKE #{bind_name}</if>-->
-            <!--<if test="description != null and description != ''">AND description LIKE #{bind_description}</if>-->
-        <!--</where>-->
+        select *
+        from car
+        <where>
+            <if test="param.chePai != null and param.chePai != ''">chePai LIKE #{bind_chePai}</if>
+            <if test="param.cheZhu != null and param.cheZhu != ''">chePai LIKE #{bind_cheZhu}</if>
+            <if test="param.dianHua != null and param.dianHua != ''">chePai LIKE #{bind_dianHua}</if>
+            <if test="param.chePingPai != null and param.chePingPai != ''">chePai LIKE #{bind_chePingPai}</if>
+            <if test="param.cheXinHao != null and param.cheXinHao != ''">chePai LIKE #{bind_cheXinHao}</if>
+            <if test="param.faDongJi != null and param.faDongJi != ''">chePai LIKE #{bind_faDongJi}</if>
+            <if test="param.cheJiaHao != null and param.cheJiaHao != ''">chePai LIKE #{bind_cheJiaHao}</if>
+            <if test="param.shenFengZheng != null and param.shenFengZheng != ''">chePai LIKE #{bind_shenFengZheng}</if>
+            <if test="param.diZhi != null and param.diZhi != ''">chePai LIKE #{bind_diZhi}</if>
+        </where>
         <!--ORDER BY ${sortInfo}-->
-        <!--limit  #{iDisplayStart}, #{iDisplayLength}-->
+        limit #{iDisplayStart}, #{iDisplayLength}
     </select>
 
     <select id="countCars" parameterType="org.wolf.carmanager.PageQueryParam" resultType="int">
-        <!--<bind name="bind_name" value="'%' + _parameter.getName() + '%'" />-->
-        <!--<bind name="bind_description" value="'%' + _parameter.getDescription() + '%'" />-->
+        <bind name="bind_chePai" value="'%' + param.getChePai() + '%'"/>
+        <bind name="bind_cheZhu" value="'%' + param.getCheZhu() + '%'"/>
+        <!--<bind name="bind_dianHua" value="'%' + param.getDianHua() + '%'"/>-->
+        <!--<bind name="bind_chePingPai" value="'%' + param.getChePingPai() + '%'"/>-->
+        <!--<bind name="bind_cheXinHao" value="'%' + param.getCheXinHao() + '%'"/>-->
+        <!--<bind name="bind_faDongJi" value="'%' + param.getFaDongJi() + '%'"/>-->
+        <!--<bind name="bind_cheJiaHao" value="'%' + param.getCheJiaHao() + '%'"/>-->
+        <!--<bind name="bind_shenFengZheng" value="'%' + param.getShenFengZheng() + '%'"/>-->
+        <!--<bind name="bind_diZhi" value="'%' + param.getDiZhi() + '%'"/>-->
+        <!--<bind name="bind_dengJiRQS" value="'%' + param.getDengJiRQS() + '%'"/>-->
+        <!--<bind name="bind_dengJiRQE" value="'%' + param.getDengJiRQE() + '%'"/>-->
+        <!--<bind name="bind_baoXianRQS" value="'%' + param.getBaoXianRQS() + '%'"/>-->
+        <!--<bind name="bind_baoXianRQE" value="'%' + param.getBaoXianRQE() + '%'"/>-->
+
         SELECT COUNT(id) FROM hades_dept
-        <!--<where>-->
-            <!--<if test="name != null and name != ''">name LIKE #{bind_name}</if>-->
-            <!--<if test="description != null and description != ''">AND description LIKE #{bind_description}</if>-->
-        <!--</where>-->
+
+        <where>
+            <if test="param.chePai != null and param.chePai != ''">chePai LIKE #{bind_chePai}</if>
+            <if test="param.cheZhu != null and param.cheZhu != ''">cheZhu LIKE #{bind_cheZhu}</if>
+            <!--<if test="param.dianHua != null and param.dianHua != ''">dianHua LIKE #{bind_dianHua}</if>-->
+            <!--<if test="param.chePingPai != null and param.chePingPai != ''">chePingPai LIKE #{bind_chePingPai}</if>-->
+            <!--<if test="param.cheXinHao != null and param.cheXinHao != ''">cheXinHao LIKE #{bind_cheXinHao}</if>-->
+            <!--<if test="param.faDongJi != null and param.faDongJi != ''">faDongJi LIKE #{bind_faDongJi}</if>-->
+            <!--<if test="param.cheJiaHao != null and param.cheJiaHao != ''">cheJiaHao LIKE #{bind_cheJiaHao}</if>-->
+            <!--<if test="param.shenFengZheng != null and param.shenFengZheng != ''">shenFengZheng LIKE #{bind_shenFengZheng}</if>-->
+            <!--<if test="param.diZhi != null and param.diZhi != ''">diZhi LIKE #{bind_diZhi}</if>-->
+        </where>
     </select>
 
 
     <select id="selectAll" resultType="org.wolf.carmanager.model.CarPO">
-        select * from car;
+        select <include refid="columns"/> from car limit 10, 5
     </select>
 
     <insert id="adCar" parameterType="org.wolf.carmanager.model.CarPO">

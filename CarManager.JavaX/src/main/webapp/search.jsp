@@ -1,8 +1,19 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
-<jsp:include page="link.jsp"/>
+<%--<jsp:include page="link.jsp"/>--%>
+
+<link rel="stylesheet" type="text/css" href="lib/bootstrap/css/bootstrap.css">
+<link rel="stylesheet" type="text/css" href="stylesheets/theme.css">
+<link rel="stylesheet" type="text/css" href="stylesheets/premium.css">
+<link rel="stylesheet" type="text/css" href="stylesheets/jquery-ui.min.css">
 <link rel="stylesheet" type="text/css" href="lib/DataTables-1.10.4/media/css/jquery.dataTables.min.css">
+
+<script language="javascript" src="lib/DataTables-1.10.4/media/js/jquery.js"></script>
+<%--<script language="javascript" src="lib/jquery-1.11.1.min.js"></script>--%>
+<script language="javascript" src="javascripts/jquery-ui.min.js"></script>
 <script language="javascript" src="lib/DataTables-1.10.4/media/js/jquery.dataTables.min.js"></script>
+
+<script language="javascript" src="javascripts/datepicker-zh.js"></script>
 
 <head>
     <title>查询</title>
@@ -12,6 +23,7 @@
 <jsp:include page="top.jsp"/>
 
 <script type="text/javascript">
+    //=========日期================
     $(function () {
         $("#datepickerS1").datepicker({
             changeMonth: true, showButtonPanel: true});
@@ -22,107 +34,135 @@
         $("#datepickerE2").datepicker({
             changeMonth: true, showButtonPanel: true});
     });
-    $("btnSearch").click(function () {
-        $.get("query.do", function () {
-
-        });
-    });
     //=========表格=========
     $(document).ready(function () {
-
-        $("#mainTable").dataTable({
-            "ajax": 'query.do',
+        $('#dataTable').dataTable({
             "processing": true,
             "serverSide": true,
+            "bSort": false,
+            "bFilter": false,
+            "bInfo": false,
+            "bLengthChange": false,
+            "sAjaxSource": "queryx.do",
+            "fnServerData": function (sSource, aoData, fnCallback) {
+                var postData = aoData.concat($('#searchForm').serializeArray());
+                $.post(sSource, postData, function (json) {
+                    fnCallback(json.data);
+                }, "json");
+            },
+//"ajax": "queryx.do",
             "columns": [
-                { "items": "id" },
-                { "items": "chePai" },
-                { "items": "cheZhu" },
-                { "items": "dianHua" },
-                { "items": "chePingPai" },
-                { "items": "cheXinHao" },
-                { "items": "faDongJi" },
-                { "items": "cheJiaHao" },
-                { "items": "dengJiRQ" },
-                { "items": "baoXianRQ" },
-                { "items": "shenFengZheng" },
-                { "items": "diZhi" }
-            ]
+                { "data": "id" },
+                { "data": "chePai" },
+                { "data": "cheZhu" },
+                { "data": "dianHua" },
+                { "data": "chePingPai" },
+                { "data": "cheXinHao" },
+                { "data": "faDongJi" },
+                { "data": "cheJiaHao" },
+                { "data": "dengJiRQ" },
+                { "data": "baoXianRQ" },
+                { "data": "shenFengZheng" },
+                { "data": "diZhi" }
+            ],
+            "oLanguage": {
+                "sLengthMenu": "每页显示 _MENU_ 条记录",
+                "sZeroRecords": "未查询到记录.",
+                "sInfo": "从 _START_ 到 _END_ /共 _TOTAL_ 条数据"
+            },
+            "oPaginate": {
+                "sFirst": "首页",
+                "sPrevious": "前一页",
+                "sNext": "后一页",
+                "sLast": "尾页"
+            }
         });
-
     });
 
+
+    //============查询============
+    $("btnSearch").click(function () {
+
+    });
 </script>
 
 
 <div class="content">
     <div class="header">
         <h1 class="page-title">查询条件</h1>
-        <table>
-            <tr class="border_bottom">
-                <td style="width:60px;" align="right">车牌</td>
-                <td><input type="text" value="" style="width:180px" class="form-control"></td>
-                <td style="width:60px" align="right">车主</td>
-                <td><input type="text" value="" style="width:200px" class="form-control"></td>
-                <td style="width:60px" align="right">电话</td>
-                <td><input type="text" value="" style="width:150px" class="form-control"></td>
-            </tr>
-            <tr class="border_bottom">
-                <td style="width:60px" align="right">车辆品牌</td>
-                <td><input type="text" value="" style="width:180px" class="form-control"></td>
-                <td style="width:60px" align="right">车辆型号</td>
-                <td><input type="text" value="" style="width:200px" class="form-control"></td>
-                <td style="width:60px" align="right">身份证</td>
-                <td><input type="text" value="" style="width:150px" class="form-control"></td>
-            </tr>
-            <tr class="border_bottom">
-                <td style="width:60px" align="right">发动机</td>
-                <td><input type="text" value="" style="width:180px" class="form-control"></td>
-                <td style="width:60px" align="right">车架号</td>
-                <td><input type="text" value="" style="width:200px" class="form-control"></td>
-                <td style="width:60px" align="right">地址</td>
-                <td colspan="3"><input type="text" value="" style="width:250px" class="form-control"></td>
-            </tr>
-            <tr class="border_bottom">
-                <td align="right">登记日期</td>
-                <td colspan="3">
-                    <table>
-                        <tr>
-                            <td><input type="text" value="" style="width:120px" class="form-control" id="datepickerS1">
-                            </td>
-                            <td>至</td>
-                            <td><input type="text" value="" style="width:120px" class="form-control" id="datepickerE1">
-                            </td>
-                        </tr>
-                    </table>
-                </td>
-                <td align="right">保险到期</td>
-                <td colspan="3">
-                    <table>
-                        <tr>
-                            <td><input type="text" value="" style="width:120px" class="form-control" id="datepickerS2">
-                            </td>
-                            <td>至</td>
-                            <td><input type="text" value="" style="width:120px" class="form-control" id="datepickerE2">
-                            </td>
-                        </tr>
-                    </table>
-                </td>
-            </tr>
-            <tr style="height:35px">
-                <td colspan="6" align="right"><input type="button" id="btnSearch" value="查询" class="btn btn-primary"
-                                                     style="width:80px"/></td>
-            </tr>
-        </table>
 
+        <form id="searchForm" onsubmit="$('#dataTable').refreshData();return false;">
+            <table>
+                <tr class="border_bottom">
+                    <td style="width:60px;" align="right">车牌</td>
+                    <td><input name="chePai" type="text" value="" style="width:180px" class="form-control"></td>
+                    <td style="width:60px" align="right">车主</td>
+                    <td><input name="cheZhu" type="text" value="" style="width:200px" class="form-control"></td>
+                    <td style="width:60px" align="right">电话</td>
+                    <td><input name="dianHua" type="text" value="" style="width:150px" class="form-control"></td>
+                </tr>
+                <tr class="border_bottom">
+                    <td style="width:60px" align="right">车辆品牌</td>
+                    <td><input name="chePingPai" type="text" value="" style="width:180px" class="form-control"></td>
+                    <td style="width:60px" align="right">车辆型号</td>
+                    <td><input name="cheXinHao" type="text" value="" style="width:200px" class="form-control"></td>
+                    <td style="width:60px" align="right">身份证</td>
+                    <td><input name="shenFengZheng" type="text" value="" style="width:150px" class="form-control"></td>
+                </tr>
+                <tr class="border_bottom">
+                    <td style="width:60px" align="right">发动机</td>
+                    <td><input name="faDongJi" type="text" value="" style="width:180px" class="form-control"></td>
+                    <td style="width:60px" align="right">车架号</td>
+                    <td><input name="cheJiaHao" type="text" value="" style="width:200px" class="form-control"></td>
+                    <td style="width:60px" align="right">地址</td>
+                    <td colspan="3"><input name="diZhi" type="text" value="" style="width:250px" class="form-control">
+                    </td>
+                </tr>
+                <tr class="border_bottom">
+                    <td align="right">登记日期</td>
+                    <td colspan="3">
+                        <table>
+                            <tr>
+                                <td><input name="dengJiRQS" type="text" value="" style="width:120px"
+                                           class="form-control"
+                                           id="datepickerS1">
+                                </td>
+                                <td>至</td>
+                                <td><input name="dengJiRQE" type="text" value="" style="width:120px"
+                                           class="form-control"
+                                           id="datepickerE1">
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td align="right">保险到期</td>
+                    <td colspan="3">
+                        <table>
+                            <tr>
+                                <td><input name="baoXianRQS" type="text" value="" style="width:120px"
+                                           class="form-control"
+                                           id="datepickerS2">
+                                </td>
+                                <td>至</td>
+                                <td><input name="baoXianRQE" type="text" value="" style="width:120px"
+                                           class="form-control"
+                                           id="datepickerE2">
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                <tr style="height:35px">
+                    <td colspan="6" align="right">
+                        <input type="button" id="btnSearch" value="查询" class="btn btn-primary" onclick="$('searchForm').submit();"
+                               style="width:80px"/></td>
+                </tr>
+            </table>
+        </form>
     </div>
     <div class="main-content">
-
         <div class="header">
-            <li class="active">查询结果</li>
-            </ul>
-
-            <table cellpadding="0" cellspacing="0" border="0" class="display" id="mainTable">
+            <table  id="dataTable" class="display" cellspacing="0" width="100%">
                 <thead>
                 <tr>
                     <th>序号</th>
@@ -141,64 +181,6 @@
                 </thead>
             </table>
 
-            <table class="table" style="overflow:scroll;">
-                <thead>
-                <tr>
-                    <th>序号</th>
-                    <th style="max-width:100px;">车牌</th>
-                    <th style="max-width:100px;">车主</th>
-                    <th style="max-width:100px;">电话</th>
-                    <th style="max-width:100px;">车辆品牌</th>
-                    <th style="max-width:100px;">车辆型号</th>
-                    <th style="max-width:100px;">发动机</th>
-                    <th style="max-width:100px;">车架号</th>
-                    <th style="max-width:100px;">登记日期</th>
-                    <th style="max-width:100px;">保险到期</th>
-                    <th style="max-width:100px;">身份证号</th>
-                    <th style="max-width:100px;">地址</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td>1</td>
-                    <td style="max-width:100px;WORD-WRAP: break-word;">苏AN331D</td>
-                    <td style="max-width:100px;WORD-WRAP: break-word;">郭玥</td>
-                    <td style="max-width:100px;WORD-WRAP: break-word;">13851888197</td>
-                    <td style="max-width:100px;WORD-WRAP: break-word;">一汽解放青岛汽车有限公司</td>
-                    <td style="max-width:100px;WORD-WRAP: break-word;">CA5043XXYP40K2L1EA84-3</td>
-                    <td style="max-width:100px;WORD-WRAP: break-word;">01991983</td>
-                    <td style="max-width:100px;WORD-WRAP: break-word;">LFNA4LBA7DAD83141</td>
-                    <td style="max-width:100px;WORD-WRAP: break-word;">320106198108073223</td>
-                    <td style="max-width:100px;WORD-WRAP: break-word;">2014/1/4</td>
-                    <td style="max-width:100px;WORD-WRAP: break-word;">2014/1/4</td>
-                    <td style="max-width:100px;WORD-WRAP: break-word;">地址一</td>
-                </tr>
-                <tr>
-                    <td>2</td>
-                    <td style="max-width:100px;WORD-WRAP: break-word;">苏AN366D</td>
-                    <td style="max-width:100px;WORD-WRAP: break-word;">郭玥</td>
-                    <td style="max-width:100px;WORD-WRAP: break-word;">13851888197</td>
-                    <td style="max-width:100px;WORD-WRAP: break-word;">一汽解放青岛汽车有限公司</td>
-                    <td style="max-width:100px;WORD-WRAP: break-word;">CA5043XXYP40K2L1EA84-3</td>
-                    <td style="max-width:100px;WORD-WRAP: break-word;">01991983</td>
-                    <td style="max-width:100px;WORD-WRAP: break-word;">LFNA4LBA7DAD83141</td>
-                    <td style="max-width:100px;WORD-WRAP: break-word;">320106198108073223</td>
-                    <td style="max-width:100px;WORD-WRAP: break-word;">2014/1/4</td>
-                    <td style="max-width:100px;WORD-WRAP: break-word;">2014/1/4</td>
-                    <td style="max-width:100px;WORD-WRAP: break-word;">地址一</td>
-                </tr>
-                </tbody>
-            </table>
-
-            <ul class="pagination">
-                <li><a href="#">&laquo;</a></li>
-                <li><a href="#">1</a></li>
-                <li><a href="#">2</a></li>
-                <li><a href="#">3</a></li>
-                <li><a href="#">4</a></li>
-                <li><a href="#">5</a></li>
-                <li><a href="#">&raquo;</a></li>
-            </ul>
         </div>
 
         <jsp:include page="footer.jsp"></jsp:include>

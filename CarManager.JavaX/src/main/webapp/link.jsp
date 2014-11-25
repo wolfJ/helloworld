@@ -1,10 +1,3 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: wolf
-  Date: 2014/11/23
-  Time: 20:41
-  To change this template use File | Settings | File Templates.
---%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 
@@ -16,13 +9,10 @@
 
 
 <link rel="stylesheet" type="text/css" href="lib/bootstrap/css/bootstrap.css">
-<link rel="stylesheet" href="lib/font-awesome/css/font-awesome.css">
 <link rel="stylesheet" type="text/css" href="stylesheets/theme.css">
 <link rel="stylesheet" type="text/css" href="stylesheets/premium.css">
 <link rel="stylesheet" type="text/css" href="stylesheets/jquery-ui.min.css">
 
 
 <script src="lib/jquery-1.11.1.min.js" type="text/javascript"></script>
-<script src="lib/jQuery-Knob/js/jquery.knob.js" type="text/javascript"></script>
 <script language="javascript" src="javascripts/jquery-ui.min.js"></script>
-<script language="javascript" src="javascripts/datepicker-zh.js"></script>

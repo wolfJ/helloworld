@@ -1,5 +1,6 @@
 package org.wolf.carmanager.persist;
 
+import org.wolf.carmanager.model.CarForm;
 import org.wolf.carmanager.model.CarPO;
 import org.wolf.carmanager.PageQueryParam;
 
@@ -7,9 +8,9 @@ import java.util.List;
 
 public interface CarMapper {
 
-    List<CarPO> selectCars(PageQueryParam<CarPO> propertyPageQueryParam);
+    List<CarPO> selectCars(PageQueryParam<CarForm> propertyPageQueryParam);
 
-    int countCars(PageQueryParam<CarPO> propertyPageQueryParam);
+    int countCars(PageQueryParam<CarForm> propertyPageQueryParam);
 
     int adCar(CarPO car);
 

@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+import org.wolf.carmanager.model.CarForm;
 import org.wolf.carmanager.model.CarPO;
 import org.wolf.carmanager.model.ImportPO;
 import org.wolf.carmanager.persist.CarMapper;
@@ -79,16 +80,18 @@ public class ImportController {
     @RequestMapping(value = "/queryx.do", produces = MediaType.APPLICATION_JSON_VALUE)
     public
     @ResponseBody
-    String queryx() {
+    String queryx( CarForm form, HttpServletRequest req, HttpServletResponse reps) {
+//        param.setParam(form);
+        PageQueryParam<CarForm> param = new PageQueryParam<CarForm>(form,form.getiDisplayStart(),form.getiDisplayLength());
         List<CarPO> list = new ArrayList<CarPO>();
-        list.add(getCarPO());
-        list.add(getCarPO());
+//         list = this.mapper.selectCars(param);
+        list = mapper.selectAll();
+        int totalCount = this.mapper.countCars(param);
         PageQueryResult result = new PageQueryResult();
         result.setData(list);
-        result.setDraw(1);
-        result.setRecordsFiltered(5);
-        result.setRecordsTotal(2);
-
+        result.setDraw(form.getiDisplayStart());
+        result.setRecordsFiltered(form.getiDisplayLength());
+       // result.setRecordsTotal(totalCount);
         return JSON.toJSONString(result);
     }
 
@@ -285,15 +288,15 @@ public class ImportController {
     }
 
 
-    public class TmpPO{
+    public class TmpPO {
         public String first_name;
-        public String  last_name;
-        public String  position;
-        public String  office;
-        public String  start_date;
-        public String  salary;
+        public String last_name;
+        public String position;
+        public String office;
+        public String start_date;
+        public String salary;
 
-        public  TmpPO(){
+        public TmpPO() {
             first_name = "Airi";
             last_name = "Satou";
             position = "Accountant";
