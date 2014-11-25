@@ -55,23 +55,7 @@ public class ImportController {
 
     private Date end;
 
-    @RequestMapping(value = "/queryx", produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<CarPO> queryXPos() {
-        List<CarPO> list = new ArrayList<CarPO>();
-        list.add(getCarPO());
-        list.add(getCarPO());
-        return list;
-    }
-
-    @RequestMapping(value = "/query", produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<CarPO> queryPos(@RequestParam PageQueryParam<CarPO> queryParam) {
-        List<CarPO> list = new ArrayList<CarPO>();
-        list.add(getCarPO());
-        list.add(getCarPO());
-        return list;
-    }
-
-    @RequestMapping(value = "/hello")
+    @RequestMapping(value = "/hello.do")
     public
     @ResponseBody
     String hello(@RequestParam("name") String name) {
@@ -98,12 +82,26 @@ public class ImportController {
         return po;
     }
 
-    @RequestMapping(value = "/helloreq")
+    @RequestMapping(value = "/helloreq.do")
     public
     @ResponseBody
     String hello(HttpServletRequest req) {
 
         return "hi!";
+    }
+
+    @RequestMapping(value="/query.do")
+    public @ResponseBody PaginationSupport query() {
+        List<CarPO> list = new ArrayList<CarPO>();
+        list.add(getCarPO());
+        list.add(getCarPO());
+
+        PageQueryParam<CarPO> param = new PageQueryParam<CarPO>();
+//         list = this.mapper.selectCars(param);
+//        int totalCount = this.mapper.countCars(param);
+
+        return new PaginationSupport(list, 2,10 ,0 );
+//        return list;
     }
 
     @RequestMapping(value = "/upload.do", method = RequestMethod.POST)

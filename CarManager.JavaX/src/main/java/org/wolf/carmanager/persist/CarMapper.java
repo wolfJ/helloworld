@@ -9,6 +9,8 @@ public interface CarMapper {
 
     List<CarPO> selectCars(PageQueryParam<CarPO> propertyPageQueryParam);
 
+    int countCars(PageQueryParam<CarPO> propertyPageQueryParam);
+
     int adCar(CarPO car);
 
     List<CarPO > selectAll();

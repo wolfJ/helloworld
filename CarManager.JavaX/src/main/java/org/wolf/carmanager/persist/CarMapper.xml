@@ -3,11 +3,32 @@
 
 <mapper namespace="org.wolf.carmanager.persist.CarMapper">
 
-    <select id="selectCars"
+    <select id="selectCars" parameterType="org.wolf.carmanager.PageQueryParam"
             resultType="org.wolf.carmanager.model.CarPO">
+        <!--<bind name="bind_name" value="'%' + _parameter.getName() + '%'" />-->
+        <!--<bind name="bind_description" value="'%' + _parameter.getDescription() + '%'" />-->
+
     select *
      from car
+        <!--<where>-->
+            <!--<if test="name != null and name != ''">name LIKE #{bind_name}</if>-->
+            <!--<if test="description != null and description != ''">AND description LIKE #{bind_description}</if>-->
+        <!--</where>-->
+        <!--ORDER BY ${sortInfo}-->
+        <!--limit  #{iDisplayStart}, #{iDisplayLength}-->
     </select>
+
+    <select id="countCars" parameterType="org.wolf.carmanager.PageQueryParam" resultType="int">
+        <!--<bind name="bind_name" value="'%' + _parameter.getName() + '%'" />-->
+        <!--<bind name="bind_description" value="'%' + _parameter.getDescription() + '%'" />-->
+        SELECT COUNT(id) FROM hades_dept
+        <!--<where>-->
+            <!--<if test="name != null and name != ''">name LIKE #{bind_name}</if>-->
+            <!--<if test="description != null and description != ''">AND description LIKE #{bind_description}</if>-->
+        <!--</where>-->
+    </select>
+
+
     <select id="selectAll" resultType="org.wolf.carmanager.model.CarPO">
         select * from car;
     </select>

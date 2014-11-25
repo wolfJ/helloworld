@@ -1,6 +1,8 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <jsp:include page="link.jsp"/>
+<link rel="stylesheet" type="text/css" href="lib/DataTables-1.10.4/media/css/jquery.dataTables.min.css">
+<script language="javascript" src="lib/DataTables-1.10.4/media/js/jquery.dataTables.min.js"></script>
 
 <head>
     <title>查询</title>
@@ -20,6 +22,36 @@
         $("#datepickerE2").datepicker({
             changeMonth: true, showButtonPanel: true});
     });
+    $("btnSearch").click(function () {
+        $.get("query.do", function () {
+
+        });
+    });
+    //=========表格=========
+    $(document).ready(function () {
+
+        $("#mainTable").dataTable({
+            "ajax": 'query.do',
+            "processing": true,
+            "serverSide": true,
+            "columns": [
+                { "items": "id" },
+                { "items": "chePai" },
+                { "items": "cheZhu" },
+                { "items": "dianHua" },
+                { "items": "chePingPai" },
+                { "items": "cheXinHao" },
+                { "items": "faDongJi" },
+                { "items": "cheJiaHao" },
+                { "items": "dengJiRQ" },
+                { "items": "baoXianRQ" },
+                { "items": "shenFengZheng" },
+                { "items": "diZhi" }
+            ]
+        });
+
+    });
+
 </script>
 
 
@@ -78,7 +110,7 @@
                 </td>
             </tr>
             <tr style="height:35px">
-                <td colspan="6" align="right"><input type="button" value="查询" class="btn btn-primary"
+                <td colspan="6" align="right"><input type="button" id="btnSearch" value="查询" class="btn btn-primary"
                                                      style="width:80px"/></td>
             </tr>
         </table>
@@ -89,6 +121,25 @@
         <div class="header">
             <li class="active">查询结果</li>
             </ul>
+
+            <table cellpadding="0" cellspacing="0" border="0" class="display" id="mainTable">
+                <thead>
+                <tr>
+                    <th>序号</th>
+                    <th style="max-width:100px;">车牌</th>
+                    <th style="max-width:100px;">车主</th>
+                    <th style="max-width:100px;">电话</th>
+                    <th style="max-width:100px;">车辆品牌</th>
+                    <th style="max-width:100px;">车辆型号</th>
+                    <th style="max-width:100px;">发动机</th>
+                    <th style="max-width:100px;">车架号</th>
+                    <th style="max-width:100px;">登记日期</th>
+                    <th style="max-width:100px;">保险到期</th>
+                    <th style="max-width:100px;">身份证号</th>
+                    <th style="max-width:100px;">地址</th>
+                </tr>
+                </thead>
+            </table>
 
             <table class="table" style="overflow:scroll;">
                 <thead>
@@ -156,10 +207,7 @@
 
 <script src="lib/bootstrap/js/bootstrap.js"></script>
 <script type="text/javascript">
-    $("[rel=tooltip]").tooltip();
-    $(function() {
-        $('.demo-cancel-click').click(function(){return false;});
-    });
+
 </script>
 
 </body>
