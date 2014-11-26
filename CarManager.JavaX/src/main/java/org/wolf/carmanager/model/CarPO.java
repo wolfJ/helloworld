@@ -1,7 +1,9 @@
 package org.wolf.carmanager.model;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Formatter;
 
 /**
  * Created by wolf on 2014/11/23.
@@ -20,6 +22,9 @@ public class CarPO implements Serializable {
     private Date baoXianRQ;
     private String shenFengZheng = "";
     private String diZhi = "";
+
+    private String dengJiRQStr;
+    private String baoXianRQStr;
 //    private String  remark;
 //    private Double  bakA;
 //    private String  bakB;
@@ -129,5 +134,20 @@ public class CarPO implements Serializable {
 //        this.remark = remark;
 //    }
 
+    static SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 
+    public String getDengJiRQStr() {
+        return formatDate(dengJiRQ);
+    }
+
+    public String getBaoXianRQStr() {
+            return formatDate(baoXianRQ);
+    }
+
+    public String formatDate(Date date) {
+        if (date != null)
+            return format.format(date);
+        else
+            return null;
+    }
 }

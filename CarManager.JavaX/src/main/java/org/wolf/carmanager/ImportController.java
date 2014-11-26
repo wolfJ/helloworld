@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -57,41 +58,20 @@ public class ImportController {
 
     private Date end;
 
-    @RequestMapping(value = "/hello.do")
-    public
-    @ResponseBody
-    String hello(@RequestParam("name") String name) {
-        try {
-            CarPO po = getCarPO();
-            mapper.adCar(po);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return "hi!";
-    }
-
-    @RequestMapping(value = "/helloreq.do")
-    public
-    @ResponseBody
-    String hello(HttpServletRequest req) {
-        return "hi!";
-    }
-
     @RequestMapping(value = "/queryx.do", produces = MediaType.APPLICATION_JSON_VALUE)
     public
     @ResponseBody
-    String queryx( CarForm form, HttpServletRequest req, HttpServletResponse reps) {
-//        param.setParam(form);
-        PageQueryParam<CarForm> param = new PageQueryParam<CarForm>(form,form.getiDisplayStart(),form.getiDisplayLength());
+    String queryx(CarForm form, HttpServletRequest req, HttpServletResponse reps) {
+        PageQueryParam<CarForm> param = new PageQueryParam<CarForm>(form, form.getiDisplayStart(), form.getiDisplayLength());
         List<CarPO> list = new ArrayList<CarPO>();
-//         list = this.mapper.selectCars(param);
-        list = mapper.selectAll();
+        list = this.mapper.selectCars(param);
+//        list = mapper.selectAll();
         int totalCount = this.mapper.countCars(param);
         PageQueryResult result = new PageQueryResult();
         result.setData(list);
         result.setDraw(form.getiDisplayStart());
         result.setRecordsFiltered(form.getiDisplayLength());
-       // result.setRecordsTotal(totalCount);
+        result.setRecordsTotal(totalCount);
         return JSON.toJSONString(result);
     }
 
@@ -130,7 +110,7 @@ public class ImportController {
 //                mapper.insertBatch(pos);//如果记录太多的话，需要更改mysql server的最大支持数，太麻烦。
                     insertBatch(pos, sb);
                     insertImportLog(file.getOriginalFilename());
-                    appendBuffer(sb, "插入数据库完成。耗时：" + endTimerAndGetSeconds() + "秒.");
+                    appendBuffer(sb, "插入数据库完成。 共" + pos.size() + "条记录， 耗时：" + endTimerAndGetSeconds() + "秒.");
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -206,13 +186,13 @@ public class ImportController {
                     po.setFaDongJi(cells[4].getContents());
                 if (cells.length > 5)
                     po.setCheJiaHao(cells[5].getContents());
-                if (cells.length > 6)
+                if (cells.length > 6 && !StringUtils.isEmpty(cells[6].getContents()))
                     po.setDengJiRQ(((DateCell) cells[6]).getDate());
                 if (cells.length > 7)
                     po.setChePingPai(cells[7].getContents());
                 if (cells.length > 8)
                     po.setShenFengZheng(cells[8].getContents());
-                if (cells.length > 9)
+                if (cells.length > 9 && !StringUtils.isEmpty(cells[9].getContents()))
                     po.setBaoXianRQ(((DateCell) cells[9]).getDate());
                 if (cells.length > 10)
                     po.setDiZhi(cells[10].getContents());

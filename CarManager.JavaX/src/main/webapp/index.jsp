@@ -28,7 +28,8 @@
     // 表格刷新
     function flushPage() {
         $("#dataTable").refreshCurrent();
-    };
+    }
+    ;
 
     $(document).ready(function () {
         $('#dataTable').dataTable({
@@ -71,8 +72,8 @@
                 { "data": "cheXinHao" },
                 { "data": "faDongJi" },
                 { "data": "cheJiaHao" },
-                { "data": "dengJiRQ" },
-                { "data": "baoXianRQ" },
+                { "data": "dengJiRQStr"},
+                { "data": "baoXianRQStr"},
                 { "data": "shenFengZheng" },
                 { "data": "diZhi" }
             ],
@@ -94,15 +95,15 @@
     });
 
     // 刷新 到第一页
-    $.fn.refreshData=function() {
+    $.fn.refreshData = function () {
         var oTable = $(this).dataTable();
         oTable.fnPageChange("first");
     };
 
     // 刷新 到当前页
-    $.fn.refreshCurrent=function() {
+    $.fn.refreshCurrent = function () {
         var oTable = $(this).dataTable();
-        oTable.fnPageChange(Number($("a[class=paginate_active]").text())-1);
+        oTable.fnPageChange(Number($("a[class=paginate_active]").text()) - 1);
     };
 </script>
 
