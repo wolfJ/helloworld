@@ -15,13 +15,13 @@
 <script type="application/javascript">
     //=========日期================
     $(function () {
-        $("#datepickerS1").datepicker({
+        $("#dengJiRQS").datepicker({
             changeMonth: true, showButtonPanel: true});
-        $("#datepickerE1").datepicker({
+        $("#dengJiRQE").datepicker({
             changeMonth: true, showButtonPanel: true});
-        $("#datepickerS2").datepicker({
+        $("#baoXianRQS").datepicker({
             changeMonth: true, showButtonPanel: true});
-        $("#datepickerE2").datepicker({
+        $("#baoXianRQE").datepicker({
             changeMonth: true, showButtonPanel: true});
     });
     //========================datatable==============
@@ -29,7 +29,6 @@
     function flushPage() {
         $("#dataTable").refreshCurrent();
     }
-    ;
 
     $(document).ready(function () {
         $('#dataTable').dataTable({
@@ -45,9 +44,17 @@
             "bSort": false,
             "bFilter": false,
             "bInfo": false,
+            "sCharSet": "utf-8",
             "bLengthChange": false,
             "sServerMethod": "POST",
             "sAjaxSource": "queryx.do",
+//            "fnServerData": function (sSource, aoData, fnCallback, oSettings) {
+//                oSettings.jqXHR = $.ajax({
+//                    "url": sSource,
+//                    "contentType": "application/json; charset=utf-8",
+//                    "success": fnCallback
+//                });
+//            },
             "fnServerParams": function (aoData) {
                 aoData.push({ "name": "chePai", "value": $("#chePai").val() });
                 aoData.push({ "name": "cheZhu", "value": $("#cheZhu").val() });
@@ -64,7 +71,7 @@
                 aoData.push({ "name": "baoXianRQE", "value": $("#baoXianRQE").val() });
             },
             "columns": [
-                { "data": "id" },
+//                { "data": "id" },
                 { "data": "chePai" },
                 { "data": "cheZhu" },
                 { "data": "dianHua" },
@@ -79,7 +86,7 @@
             ],
             "oLanguage": {
                 "sLengthMenu": "每页显示 _MENU_ 行",
-                "sZeroRecords": "请选择条件后，按查询按钮开始查询",
+                "sZeroRecords": "没有查到记录.",
                 //"sProcessing": '<img src="/images/ajax-loader-snake.gif"/>正在查询...',
                 "sInfo": "当前第 _START_ - _END_ 行　共计 _TOTAL_ 行",
                 "sInfoEmpty": "没有符合条件的记录",
@@ -149,14 +156,12 @@
                 <td colspan="3">
                     <table>
                         <tr>
-                            <td><input id="dengJiRQS" type="text" value="" style="width:120px"
-                                       class="form-control"
-                                       id="datepickerS1">
+                            <td><input id="dengJiRQS" type="text" value="" readonly="true" style="width:120px"
+                                       class="form-control">
                             </td>
                             <td>至</td>
-                            <td><input id="dengJiRQE" type="text" value="" style="width:120px"
-                                       class="form-control"
-                                       id="datepickerE1">
+                            <td><input id="dengJiRQE" type="text" value="" readonly="true" style="width:120px"
+                                       class="form-control">
                             </td>
                         </tr>
                     </table>
@@ -165,14 +170,12 @@
                 <td colspan="3">
                     <table>
                         <tr>
-                            <td><input id="baoXianRQS" type="text" value="" style="width:120px"
-                                       class="form-control"
-                                       id="datepickerS2">
+                            <td><input id="baoXianRQS" type="text" value="" readonly="true" style="width:120px"
+                                       class="form-control">
                             </td>
                             <td>至</td>
-                            <td><input id="baoXianRQE" type="text" value="" style="width:120px"
-                                       class="form-control"
-                                       id="datepickerE2">
+                            <td><input id="baoXianRQE" type="text" value="" readonly="true" style="width:120px"
+                                       class="form-control">
                             </td>
                         </tr>
                     </table>
@@ -191,7 +194,7 @@
 <table id="dataTable" class="display" cellspacing="0" width="100%">
     <thead>
     <tr>
-        <th>序号</th>
+        <%--<th>序号</th>--%>
         <th style="max-width:100px;">车牌</th>
         <th style="max-width:100px;">车主</th>
         <th style="max-width:100px;">电话</th>

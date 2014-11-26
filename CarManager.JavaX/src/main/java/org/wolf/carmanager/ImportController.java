@@ -10,7 +10,6 @@ import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,9 +25,7 @@ import org.wolf.carmanager.persist.ImportMapper;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -58,14 +55,13 @@ public class ImportController {
 
     private Date end;
 
-    @RequestMapping(value = "/queryx.do", produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/queryx.do", produces = {"application/json;charset=UTF-8"})
     public
     @ResponseBody
     String queryx(CarForm form, HttpServletRequest req, HttpServletResponse reps) {
         PageQueryParam<CarForm> param = new PageQueryParam<CarForm>(form, form.getiDisplayStart(), form.getiDisplayLength());
         List<CarPO> list = new ArrayList<CarPO>();
         list = this.mapper.selectCars(param);
-//        list = mapper.selectAll();
         int totalCount = this.mapper.countCars(param);
         PageQueryResult result = new PageQueryResult();
         result.setData(list);
@@ -75,19 +71,6 @@ public class ImportController {
         return JSON.toJSONString(result);
     }
 
-    @RequestMapping(value = "/query.do")
-    public
-    @ResponseBody
-    List<CarPO> query() { //
-        List<CarPO> list = new ArrayList<CarPO>();
-        list.add(getCarPO());
-        list.add(getCarPO());
-//        PageQueryParam<CarPO> param = new PageQueryParam<CarPO>();
-//         list = this.mapper.selectCars(param);
-//        int totalCount = this.mapper.countCars(param);
-//        return new PaginationSupport(list, 2,10 ,0 );
-        return list;
-    }
 
     @RequestMapping(value = "/upload.do", method = RequestMethod.POST)
     public void handleFileUpload(@RequestParam MultipartFile file, HttpServletResponse response) {
@@ -135,6 +118,7 @@ public class ImportController {
         }
 //        return "async.html?msg=" + sb.toString();
     }
+
 
     private void insertImportLog(String filename) {
 
@@ -253,7 +237,6 @@ public class ImportController {
         return convFile;
     }
 
-
     private CarPO getCarPO() {
         CarPO po = new CarPO();
         po.setChePai("chepai");
@@ -266,24 +249,5 @@ public class ImportController {
         po.setDengJiRQ(new Date());
         return po;
     }
-
-
-    public class TmpPO {
-        public String first_name;
-        public String last_name;
-        public String position;
-        public String office;
-        public String start_date;
-        public String salary;
-
-        public TmpPO() {
-            first_name = "Airi";
-            last_name = "Satou";
-            position = "Accountant";
-            start_date = "28th Nov 08";
-            salary = "$162,700";
-        }
-    }
-
 
 }

@@ -111,7 +111,7 @@
         <li>
             <ul class="dashboard-menu nav nav-list collapse in">
                 <li><a href="search.jsp"><span class="fa fa-caret-right"></span> 车牌查询</a></li>
-                <li><a href="cmImportHistory.html"><span class="fa fa-caret-right"></span> 导入历史</a>
+                <li><a href="importHistory.html"><span class="fa fa-caret-right"></span> 导入历史</a>
                 </li>
                 <li><a href="import.jsp"><span class="fa fa-caret-right"></span> 数据导入</a></li>
             </ul>

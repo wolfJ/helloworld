@@ -30,10 +30,10 @@
         <bind name="bind_cheJiaHao" value="'%' + param.getCheJiaHao() + '%'"/>
         <bind name="bind_shenFengZheng" value="'%' + param.getShenFengZheng() + '%'"/>
         <bind name="bind_diZhi" value="'%' + param.getDiZhi() + '%'"/>
-        <bind name="bind_dengJiRQS" value="'%' + param.getDengJiRQS() + '%'"/>
-        <bind name="bind_dengJiRQE" value="'%' + param.getDengJiRQE() + '%'"/>
-        <bind name="bind_baoXianRQS" value="'%' + param.getBaoXianRQS() + '%'"/>
-        <bind name="bind_baoXianRQE" value="'%' + param.getBaoXianRQE() + '%'"/>
+        <!--<bind name="bind_dengJiRQS" value="'%' + param.getDengJiRQS() + '%'"/>-->
+        <bind name="bind_dengJiRQE" value="param.getDengJiRQE() + '  23:59:59'"/>
+        <!--<bind name="bind_baoXianRQS" value="'%' + param.getBaoXianRQS() + '%'"/>-->
+        <bind name="bind_baoXianRQE" value="param.getBaoXianRQE() + '  23:59:59'"/>
 
         select * from car where 1=1
         <if test="param.chePai != null and param.chePai != ''">AND chePai LIKE #{bind_chePai}</if>
@@ -43,9 +43,25 @@
         <if test="param.cheXinHao != null and param.cheXinHao != ''">AND cheXinHao LIKE #{bind_cheXinHao}</if>
         <if test="param.faDongJi != null and param.faDongJi != ''">AND faDongJi LIKE #{bind_faDongJi}</if>
         <if test="param.cheJiaHao != null and param.cheJiaHao != ''">AND cheJiaHao LIKE #{bind_cheJiaHao}</if>
-        <if test="param.shenFengZheng != null and param.shenFengZheng != ''">AND shenFengZheng LIKE #{bind_shenFengZheng}
+        <if test="param.shenFengZheng != null and param.shenFengZheng != ''">AND shenFengZheng LIKE #{bind_shenFengZheng}</if>
+        <if test="param.diZhi != null and param.diZhi != ''">and diZhi LIKE #{bind_diZhi}</if>
+        <if test="param.dengJiRQS != null and param.dengJiRQS != ''">
+            and dengJiRQ >= #{param.dengJiRQS}
         </if>
-        <if test="param.diZhi != null and param.diZhi != ''">diZhi LIKE #{bind_diZhi}</if>
+        <if test="param.dengJiRQE != null and param.dengJiRQE != ''">
+            <![CDATA[
+            and dengJiRQ <= #{bind_dengJiRQE}
+            ]]>
+        </if>
+        <if test="param.baoXianRQS != null and param.baoXianRQS != ''">
+            and baoXianRQ >= #{param.baoXianRQS}
+        </if>
+        <if test="param.baoXianRQE != null and param.baoXianRQE != ''">
+            <![CDATA[
+            and baoXianRQ <= #{bind_baoXianRQE}
+            ]]>
+        </if>
+
         <!--ORDER BY ${sortInfo}-->
         limit #{iDisplayStart}, #{iDisplayLength}
     </select>
@@ -60,12 +76,12 @@
         <bind name="bind_cheJiaHao" value="'%' + param.getCheJiaHao() + '%'"/>
         <bind name="bind_shenFengZheng" value="'%' + param.getShenFengZheng() + '%'"/>
         <bind name="bind_diZhi" value="'%' + param.getDiZhi() + '%'"/>
-        <bind name="bind_dengJiRQS" value="'%' + param.getDengJiRQS() + '%'"/>
-        <bind name="bind_dengJiRQE" value="'%' + param.getDengJiRQE() + '%'"/>
-        <bind name="bind_baoXianRQS" value="'%' + param.getBaoXianRQS() + '%'"/>
-        <bind name="bind_baoXianRQE" value="'%' + param.getBaoXianRQE() + '%'"/>
+        <!--<bind name="bind_dengJiRQS" value="'%' + param.getDengJiRQS() + '%'"/>-->
+        <bind name="bind_dengJiRQE" value="param.getDengJiRQE() + '  23:59:59'"/>
+        <!--<bind name="bind_baoXianRQS" value="'%' + param.getBaoXianRQS() + '%'"/>-->
+        <bind name="bind_baoXianRQE" value="param.getBaoXianRQE() + '  23:59:59'"/>
 
-        SELECT COUNT(id) FROM car where 1=1
+        SELECT COUNT(*) FROM car where 1=1
         <if test="param.chePai != null and param.chePai != ''">AND chePai LIKE #{bind_chePai}</if>
         <if test="param.cheZhu != null and param.cheZhu != ''">AND cheZhu LIKE #{bind_cheZhu}</if>
         <if test="param.dianHua != null and param.dianHua != ''">AND dianHua LIKE #{bind_dianHua}</if>
@@ -77,6 +93,22 @@
             #{bind_shenFengZheng}
         </if>
         <if test="param.diZhi != null and param.diZhi != ''">AND diZhi LIKE #{bind_diZhi}</if>
+        <if test="param.dengJiRQS != null and param.dengJiRQS != ''">
+            and dengJiRQ >= #{param.dengJiRQS}
+        </if>
+        <if test="param.dengJiRQE != null and param.dengJiRQE != ''">
+            <![CDATA[
+            and dengJiRQ <= #{bind_dengJiRQE}
+            ]]>
+        </if>
+        <if test="param.baoXianRQS != null and param.baoXianRQS != ''">
+            and baoXianRQ >= #{param.baoXianRQS}
+        </if>
+        <if test="param.baoXianRQE != null and param.baoXianRQE != ''">
+            <![CDATA[
+            and baoXianRQ <= #{bind_baoXianRQE}
+            ]]>
+        </if>
     </select>
 
 
