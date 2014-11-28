@@ -8,11 +8,4 @@
 <meta name="author" content="">
 
 
-<link rel="stylesheet" type="text/css" href="lib/bootstrap/css/bootstrap.css">
-<link rel="stylesheet" type="text/css" href="stylesheets/theme.css">
-<link rel="stylesheet" type="text/css" href="stylesheets/premium.css">
-<link rel="stylesheet" type="text/css" href="stylesheets/jquery-ui.min.css">
 
-
-<script src="lib/jquery-1.11.1.min.js" type="text/javascript"></script>
-<script language="javascript" src="javascripts/jquery-ui.min.js"></script>

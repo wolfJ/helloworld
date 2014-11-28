@@ -8,8 +8,9 @@ import jxl.Workbook;
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,6 +35,7 @@ import java.util.List;
 
 @Controller
 public class ImportController {
+    private Logger logger = LoggerFactory.getLogger(ImportController.class);
     private static final String headStr = "车牌,车主,车辆型号,电话,发动机号,车架号,登记日期,车辆品牌,身份证号,保险到期,地址";
     private String[] headArr;
 
@@ -55,19 +57,34 @@ public class ImportController {
 
     private Date end;
 
+    @RequestMapping(value = "/queryImportLog.do", produces = {"application/json;charset=UTF-8"})
+    public
+    @ResponseBody
+    String queryImportLog( HttpServletRequest req, HttpServletResponse reps) {
+        List<ImportPO> list = importMapper.selectAll();
+        PageQueryResult result = new PageQueryResult();
+        result.setData(list);
+        return JSON.toJSONString(result);
+    }
+
+
     @RequestMapping(value = "/queryx.do", produces = {"application/json;charset=UTF-8"})
     public
     @ResponseBody
     String queryx(CarForm form, HttpServletRequest req, HttpServletResponse reps) {
-        PageQueryParam<CarForm> param = new PageQueryParam<CarForm>(form, form.getiDisplayStart(), form.getiDisplayLength());
-        List<CarPO> list = new ArrayList<CarPO>();
-        list = this.mapper.selectCars(param);
-        int totalCount = this.mapper.countCars(param);
         PageQueryResult result = new PageQueryResult();
-        result.setData(list);
-        result.setDraw(form.getiDisplayStart());
-        result.setRecordsFiltered(form.getiDisplayLength());
-        result.setRecordsTotal(totalCount);
+        try {
+            PageQueryParam<CarForm> param = new PageQueryParam<CarForm>(form, form.getiDisplayStart(), form.getiDisplayLength());
+            List<CarPO> list = new ArrayList<CarPO>();
+            list = this.mapper.selectCars(param);
+            int totalCount = this.mapper.countCars(param);
+            result.setData(list);
+            result.setDraw(form.getiDisplayStart());
+            result.setiTotalDisplayRecords(totalCount);
+            result.setiTotalRecords(totalCount);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+        }
         return JSON.toJSONString(result);
     }
 
@@ -81,7 +98,6 @@ public class ImportController {
         } else if (!file.getOriginalFilename().endsWith(".xls")) {
             appendBuffer(sb, "文件【" + file.getOriginalFilename() + "】不是XLS文件！");
         } else {
-
             try {
                 Workbook book = Workbook.getWorkbook(convertToFIle(file));
                 Sheet sheet = book.getSheet(0);
@@ -91,9 +107,10 @@ public class ImportController {
                     appendBuffer(sb, "准备插入数据库...");
                     startTimer();
 //                mapper.insertBatch(pos);//如果记录太多的话，需要更改mysql server的最大支持数，太麻烦。
-                    insertBatch(pos, sb);
-                    insertImportLog(file.getOriginalFilename());
-                    appendBuffer(sb, "插入数据库完成。 共" + pos.size() + "条记录， 耗时：" + endTimerAndGetSeconds() + "秒.");
+                    boolean insert = insertBatch(pos, sb);
+                    if (insert)
+                        insertImportLog(file.getOriginalFilename());
+                    appendBuffer(sb, "插入数据库结束。 共" + pos.size() + "条记录， 耗时：" + endTimerAndGetSeconds() + "秒.");
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -119,30 +136,41 @@ public class ImportController {
 //        return "async.html?msg=" + sb.toString();
     }
 
-
     private void insertImportLog(String filename) {
-
         ImportPO ipo = new ImportPO();
         ipo.setImportFileName(filename);
         ipo.setImportTime(new Date());
         importMapper.insert(ipo);
     }
 
-    private void insertBatch(List<CarPO> pos, StringBuffer sb) {
+    private boolean insertBatch(List<CarPO> pos, StringBuffer sb) {
 
-        SqlSession session = sqlSessionFactory.openSession(ExecutorType.BATCH);
+//        SqlSession session = sqlSessionFactory.openSession(ExecutorType.BATCH);
         try {
-            CarMapper car = session.getMapper(CarMapper.class);
-            for (CarPO po : pos) {
-                car.adCar(po);
+//            CarMapper carMp = session.getMapper(CarMapper.class);
+            int count = pos.size();
+            int start = 0;
+            int end = 0;
+            while (!(start == count)) {
+                end += 2000;
+                if (end >= count) {
+                    end = count;
+                }
+                List<CarPO> toSaveList = pos.subList(start, end);
+                mapper.insertBatch(toSaveList);
+                start = end;
             }
-            session.commit();
-            session.clearCache();
+//            session.commit();
+//            session.clearCache();
+            appendBuffer(sb, "保存数据成功:)");
+            return true;
         } catch (Exception e) {
+//            session.rollback();
             e.printStackTrace();
-            appendBuffer(sb, "保存数据时出现异常:" + e.getMessage());
+            appendBuffer(sb, "保存失败，插入时出现异常:" + e.getMessage());
+            return false;
         } finally {
-            session.close();
+//            session.close();
         }
 
     }
@@ -190,11 +218,11 @@ public class ImportController {
         return list;
     }
 
-    private int endTimerAndGetSeconds() {
+    private long endTimerAndGetSeconds() {
         if (start == null)
             start = new Date();
         end = new Date();
-        return (new Date(end.getTime() - start.getTime())).getSeconds();
+        return (end.getTime() - start.getTime()) / 1000;
     }
 
     private void startTimer() {

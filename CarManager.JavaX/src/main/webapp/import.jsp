@@ -1,9 +1,22 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
-<jsp:include page="link.jsp"/>
 <head>
     <title>导入</title>
 </head>
+
+<link rel="stylesheet" type="text/css" href="lib/bootstrap/css/bootstrap.css">
+<link rel="stylesheet" type="text/css" href="stylesheets/theme.css">
+<link rel="stylesheet" type="text/css" href="stylesheets/premium.css">
+<link rel="stylesheet" type="text/css" href="stylesheets/jquery-ui.min.css">
+<link rel="stylesheet" type="text/css" href="lib/DataTables-1.10.4/media/css/jquery.dataTables.min.css">
+<link rel="stylesheet" type="text/css" href="lib/font-awesome/css/font-awesome.css">
+
+
+<script language="javascript" src="lib/DataTables-1.10.4/media/js/jquery.js"></script>
+<script type="text/javascript" src="lib/jQuery-Knob/js/jquery.knob.js"></script>
+<script language="javascript" src="lib/DataTables-1.10.4/media/js/jquery.dataTables.min.js"></script>
+<script language="javascript" src="javascripts/jquery-ui.min.js"></script>
+<script language="javascript" src="javascripts/datepicker-zh.js"></script>
 
 <body class=" theme-blue">
 <jsp:include page="top.jsp"/>

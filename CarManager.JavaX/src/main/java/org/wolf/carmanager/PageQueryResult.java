@@ -7,8 +7,8 @@ import java.util.List;
  */
 public class PageQueryResult<T> {
     private int draw;
-    private int recordsTotal ;
-    private int recordsFiltered;
+    private int iTotalRecords;
+    private int iTotalDisplayRecords;
     private List<T> data;
 
     public int getDraw() {
@@ -19,20 +19,20 @@ public class PageQueryResult<T> {
         this.draw = draw;
     }
 
-    public int getRecordsTotal() {
-        return recordsTotal;
+    public int getiTotalRecords() {
+        return iTotalRecords;
     }
 
-    public void setRecordsTotal(int recordsTotal) {
-        this.recordsTotal = recordsTotal;
+    public void setiTotalRecords(int iTotalRecords) {
+        this.iTotalRecords = iTotalRecords;
     }
 
-    public int getRecordsFiltered() {
-        return recordsFiltered;
+    public int getiTotalDisplayRecords() {
+        return iTotalDisplayRecords;
     }
 
-    public void setRecordsFiltered(int recordsFiltered) {
-        this.recordsFiltered = recordsFiltered;
+    public void setiTotalDisplayRecords(int iTotalDisplayRecords) {
+        this.iTotalDisplayRecords = iTotalDisplayRecords;
     }
 
     public List<T> getData() {

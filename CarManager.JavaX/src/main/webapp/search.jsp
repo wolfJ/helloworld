@@ -7,8 +7,10 @@
 <link rel="stylesheet" type="text/css" href="stylesheets/premium.css">
 <link rel="stylesheet" type="text/css" href="stylesheets/jquery-ui.min.css">
 <link rel="stylesheet" type="text/css" href="lib/DataTables-1.10.4/media/css/jquery.dataTables.min.css">
+<link rel="stylesheet" type="text/css" href="lib/font-awesome/css/font-awesome.css">
 
 <script language="javascript" src="lib/DataTables-1.10.4/media/js/jquery.js"></script>
+<script type="text/javascript" src="lib/jQuery-Knob/js/jquery.knob.js"></script>
 <%--<script language="javascript" src="lib/jquery-1.11.1.min.js"></script>--%>
 <script language="javascript" src="javascripts/jquery-ui.min.js"></script>
 <script language="javascript" src="lib/DataTables-1.10.4/media/js/jquery.dataTables.min.js"></script>
@@ -23,10 +25,16 @@
 <jsp:include page="top.jsp"/>
 
 <style type="text/css">
-
+    .table-tbody td {
+        max-width: 100px;
+        WORD-WRAP: break-word;
+    }
 </style>
 
 <script type="text/javascript">
+//    $(function() {
+//        $(".knob").knob();
+//    });
     //=========日期================
     $(function () {
         $("#dengJiRQS").datepicker({
@@ -84,24 +92,23 @@
                 aoData.push({ "name": "baoXianRQS", "value": $("#baoXianRQS").val() });
                 aoData.push({ "name": "baoXianRQE", "value": $("#baoXianRQE").val() });
             },
-            "columns": [
-//                { "data": "id" },
-                { "data": "chePai", "width": "10%" },
-                { "data": "cheZhu", "width": "10%" },
-                { "data": "dianHua", "width": "10%" },
-                { "data": "chePingPai", "width": "10%" },
-                { "data": "cheXinHao", "width": "10%"  },
-                { "data": "faDongJi", "width": "10%" },
-                { "data": "cheJiaHao", "width": "10%" },
-                { "data": "dengJiRQStr", "width": "10%" },
-                { "data": "baoXianRQStr", "width": "10%" },
-                { "data": "shenFengZheng", "width": "10%"  },
-                { "data": "diZhi" }
+            "aoColumns": [
+                { "data": "chePai", "defaultContent": ""},
+                { "data": "cheZhu", "defaultContent": ""},
+                { "data": "dianHua", "defaultContent": ""},
+                { "data": "chePingPai", "defaultContent": ""},
+                { "data": "cheXinHao", "defaultContent": ""},
+                { "data": "faDongJi", "defaultContent": ""},
+                { "data": "cheJiaHao", "defaultContent": ""},
+                { "data": "dengJiRQStr", "defaultContent": ""},
+                { "data": "baoXianRQStr", "defaultContent": ""},
+                { "data": "shenFengZheng", "defaultContent": ""},
+                { "data": "diZhi", "defaultContent": ""}
             ],
             "oLanguage": {
                 "sLengthMenu": "每页显示 _MENU_ 行",
                 "sZeroRecords": "没有查到记录.",
-                //"sProcessing": '<img src="/images/ajax-loader-snake.gif"/>正在查询...',
+                "sProcessing": '<img src="/images/ajax-loader-snake.gif"/>正在查询...',
                 "sInfo": "当前第 _START_ - _END_ 行　共计 _TOTAL_ 行",
                 "sInfoEmpty": "没有符合条件的记录",
                 "sSearch": "搜索：",
@@ -200,7 +207,7 @@
     </form>
     <div class="main-content">
         <div class="header">
-            <table id="dataTable" class="table table-striped table-bordered" cellspacing="0" width="100%">
+            <table id="dataTable" class="table table-striped table-bordered table-tbody" cellspacing="0" width="100%">
                 <%--class="display"--%>
                 <thead>
                 <tr>

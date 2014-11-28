@@ -134,7 +134,7 @@ public class CarPO implements Serializable {
 //        this.remark = remark;
 //    }
 
-    static SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+    static SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
 
     public String getDengJiRQStr() {
         return formatDate(dengJiRQ);

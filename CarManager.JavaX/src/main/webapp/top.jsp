@@ -7,21 +7,9 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
-<script type="text/javascript">
-    $(function () {
-        var match = document.cookie.match(new RegExp('color=([^;]+)'));
-        if (match) var color = match[1];
-        if (color) {
-            $('body').removeClass(function (index, css) {
-                return (css.match(/\btheme-\S+/g) || []).join(' ')
-            })
-            $('body').addClass('theme-' + color);
-        }
+<%--<script language="javascript" src="lib/DataTables-1.10.4/media/js/jquery.js"></script>--%>
 
-        $('[data-popover="true"]').popover({html: true});
 
-    });
-</script>
 <style type="text/css">
     #line-chart {
         height: 300px;
@@ -95,7 +83,7 @@
 
                 <ul class="dropdown-menu">
                     <li class="divider"></li>
-                    <li><a tabindex="-1" href="sign-in.html">Logout</a></li>
+                    <li><a tabindex="-1" href="#">Logout</a></li>
                 </ul>
             </li>
         </ul>
@@ -111,9 +99,9 @@
         <li>
             <ul class="dashboard-menu nav nav-list collapse in">
                 <li><a href="search.jsp"><span class="fa fa-caret-right"></span> 车牌查询</a></li>
-                <li><a href="importHistory.html"><span class="fa fa-caret-right"></span> 导入历史</a>
-                </li>
                 <li><a href="import.jsp"><span class="fa fa-caret-right"></span> 数据导入</a></li>
+                <li><a href="importHistory.jsp"><span class="fa fa-caret-right"></span> 导入历史</a>
+                </li>
             </ul>
         </li>
     </ul>
