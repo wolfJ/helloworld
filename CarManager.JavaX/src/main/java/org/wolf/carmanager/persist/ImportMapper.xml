@@ -7,6 +7,6 @@
     </insert>
 
     <select id="selectAll" resultType="org.wolf.carmanager.model.ImportPO">
-        select * from importlog
+        select * from importlog order by id desc
     </select>
 </mapper>

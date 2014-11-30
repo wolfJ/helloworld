@@ -1,12 +1,7 @@
 package org.wolf.carmanager;
 
 import com.alibaba.fastjson.JSON;
-import jxl.Cell;
-import jxl.DateCell;
-import jxl.Sheet;
-import jxl.Workbook;
-import org.apache.ibatis.session.ExecutorType;
-import org.apache.ibatis.session.SqlSession;
+import jxl.*;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,7 +23,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -52,7 +51,8 @@ public class ImportController {
     @Autowired
     private SqlSessionFactory sqlSessionFactory;
 
-
+    private static String defaultDatePattern = "yyyy-MM-dd";
+    private static String defaultDateTimePattern = "yyyy-MM-dd HH:mm:ss";
     private Date start;
 
     private Date end;
@@ -60,7 +60,8 @@ public class ImportController {
     @RequestMapping(value = "/queryImportLog.do", produces = {"application/json;charset=UTF-8"})
     public
     @ResponseBody
-    String queryImportLog( HttpServletRequest req, HttpServletResponse reps) {
+    String queryImportLog(HttpServletRequest req, HttpServletResponse reps) {
+        logger.error("do queryImportLog.do");
         List<ImportPO> list = importMapper.selectAll();
         PageQueryResult result = new PageQueryResult();
         result.setData(list);
@@ -74,6 +75,7 @@ public class ImportController {
     String queryx(CarForm form, HttpServletRequest req, HttpServletResponse reps) {
         PageQueryResult result = new PageQueryResult();
         try {
+            logger.info("do queryx.do...");
             PageQueryParam<CarForm> param = new PageQueryParam<CarForm>(form, form.getiDisplayStart(), form.getiDisplayLength());
             List<CarPO> list = new ArrayList<CarPO>();
             list = this.mapper.selectCars(param);
@@ -90,16 +92,24 @@ public class ImportController {
 
 
     @RequestMapping(value = "/upload.do", method = RequestMethod.POST)
-    public void handleFileUpload(@RequestParam MultipartFile file, HttpServletResponse response) {
+    public void handleFileUpload(@RequestParam MultipartFile file, @RequestParam("fileName") String fileName, HttpServletRequest request, HttpServletResponse response) {
         StringBuffer sb = new StringBuffer("开始处理上传的文件...");
-
-        if (file.isEmpty()) {
+        try {
+            fileName = URLDecoder.decode(fileName,"utf-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        logger.info("do upload.do...");
+        if (file.isEmpty() || StringUtils.isEmpty(fileName)) {
             appendBuffer(sb, "上传了空的文件！");
-        } else if (!file.getOriginalFilename().endsWith(".xls")) {
-            appendBuffer(sb, "文件【" + file.getOriginalFilename() + "】不是XLS文件！");
+            logger.warn("上传了空的文件...");
+        } else if (!fileName.endsWith(".xls")) {
+            appendBuffer(sb, "文件【" + fileName + "】不是XLS文件！");
+            logger.warn("文件【" + fileName + "】不是XLS文件！");
         } else {
             try {
-                Workbook book = Workbook.getWorkbook(convertToFIle(file));
+                startTimer();
+                Workbook book = Workbook.getWorkbook(convertToFIle(file,fileName));
                 Sheet sheet = book.getSheet(0);
                 if (validate(sheet, sb)) {
                     appendBuffer(sb, "验证表格格式通过.");
@@ -109,7 +119,7 @@ public class ImportController {
 //                mapper.insertBatch(pos);//如果记录太多的话，需要更改mysql server的最大支持数，太麻烦。
                     boolean insert = insertBatch(pos, sb);
                     if (insert)
-                        insertImportLog(file.getOriginalFilename());
+                        insertImportLog(fileName);
                     appendBuffer(sb, "插入数据库结束。 共" + pos.size() + "条记录， 耗时：" + endTimerAndGetSeconds() + "秒.");
                 }
             } catch (IOException e) {
@@ -132,6 +142,7 @@ public class ImportController {
             response.sendRedirect("async.html" + "?msg=" + msg);
         } catch (IOException e) {
             e.printStackTrace();
+            logger.error("do response exp:" + e.getMessage());
         }
 //        return "async.html?msg=" + sb.toString();
     }
@@ -144,10 +155,7 @@ public class ImportController {
     }
 
     private boolean insertBatch(List<CarPO> pos, StringBuffer sb) {
-
-//        SqlSession session = sqlSessionFactory.openSession(ExecutorType.BATCH);
         try {
-//            CarMapper carMp = session.getMapper(CarMapper.class);
             int count = pos.size();
             int start = 0;
             int end = 0;
@@ -160,62 +168,92 @@ public class ImportController {
                 mapper.insertBatch(toSaveList);
                 start = end;
             }
-//            session.commit();
-//            session.clearCache();
             appendBuffer(sb, "保存数据成功:)");
             return true;
         } catch (Exception e) {
-//            session.rollback();
             e.printStackTrace();
+            logger.error("insertBatch exp:" + e.getMessage());
             appendBuffer(sb, "保存失败，插入时出现异常:" + e.getMessage());
             return false;
-        } finally {
-//            session.close();
         }
-
     }
 
     private List<CarPO> parseToPOs(Sheet sheet, StringBuffer sb) throws Exception {
         appendBuffer(sb, "开始解析文件内容...，共" + sheet.getRows() + "行");
         int rows = sheet.getRows();
         List<CarPO> list = new ArrayList<CarPO>();
-        startTimer();
         int i = 1;
         try {
+            Cell[] heads = sheet.getRow(0);
             for (i = 1; i < rows; i++) {
                 Cell[] cells = sheet.getRow(i);
+
                 CarPO po = new CarPO();
                 //车牌,车主,车辆型号,电话,发动机号,车架号,登记日期,车辆品牌,身份证号,保险到期,地址
-                if (cells.length > 0)
-                    po.setChePai(cells[0].getContents());
-                if (cells.length > 1)
-                    po.setCheZhu(cells[1].getContents());
-                if (cells.length > 2)
-                    po.setCheXinHao(cells[2].getContents());
-                if (cells.length > 3)
-                    po.setDianHua(cells[3].getContents());
-                if (cells.length > 4)
-                    po.setFaDongJi(cells[4].getContents());
-                if (cells.length > 5)
-                    po.setCheJiaHao(cells[5].getContents());
-                if (cells.length > 6 && !StringUtils.isEmpty(cells[6].getContents()))
-                    po.setDengJiRQ(((DateCell) cells[6]).getDate());
-                if (cells.length > 7)
-                    po.setChePingPai(cells[7].getContents());
-                if (cells.length > 8)
-                    po.setShenFengZheng(cells[8].getContents());
-                if (cells.length > 9 && !StringUtils.isEmpty(cells[9].getContents()))
-                    po.setBaoXianRQ(((DateCell) cells[9]).getDate());
-                if (cells.length > 10)
-                    po.setDiZhi(cells[10].getContents());
+                for (int j = 0; j < cells.length; j++) {
+                    if ("车牌".equals(heads[j].getContents())) {
+                        po.setChePai(cells[j].getContents());
+                    } else if ("车主".equals(heads[j].getContents())) {
+                        po.setCheZhu(cells[j].getContents());
+                    } else if ("车辆型号".equals(heads[j].getContents())) {
+                        po.setCheXinHao(cells[j].getContents());
+                    } else if ("电话".equals(heads[j].getContents())) {
+                        po.setDianHua(cells[j].getContents());
+                    } else if ("发动机号".equals(heads[j].getContents())) {
+                        po.setFaDongJi(cells[j].getContents());
+                    } else if ("车架号".equals(heads[j].getContents())) {
+                        po.setCheJiaHao(cells[j].getContents());
+                    } else if ("车辆品牌".equals(heads[j].getContents())) {
+                        po.setChePingPai(cells[j].getContents());
+                    } else if ("身份证号".equals(heads[j].getContents())) {
+                        po.setShenFengZheng(cells[j].getContents());
+                    } else if ("地址".equals(heads[j].getContents())) {
+                        po.setDiZhi(cells[j].getContents());
+                    } else if ("登记日期".equals(heads[j].getContents()) && !StringUtils.isEmpty(cells[j].getContents())) {
+                        if (cells[j].getType() == CellType.DATE) {
+                            po.setDengJiRQ(((DateCell) cells[j]).getDate());
+                        } else {
+                            po.setDengJiRQ(getDateFromStr(cells[j].getContents(), sb));
+                        }
+                    } else if ("保险到期".equals(heads[j].getContents()) && !StringUtils.isEmpty(cells[j].getContents())) {
+                        if (cells[j].getType() == CellType.DATE) {
+                            po.setBaoXianRQ(((DateCell) cells[j]).getDate());
+                        } else {
+                            po.setBaoXianRQ(getDateFromStr(cells[j].getContents(), sb));
+                        }
+                    }
+
+                }
                 list.add(po);
             }
         } catch (Exception e) {
             appendBuffer(sb, "解析文件时异常，第【" + (i + 1) + "】行出现异常");
+            logger.error("解析文件时异常，第【" + (i + 1) + "】行出现异常 exp:" + e.getMessage());
             throw e;
         }
         appendBuffer(sb, "解析文件内容结束，耗时：" + endTimerAndGetSeconds() + "秒.");
         return list;
+    }
+
+    private Date getDateFromStr(String strDate, StringBuffer sb) throws Exception {
+        try {
+            if (defaultDatePattern.length() == strDate.length()) {
+                return new SimpleDateFormat(defaultDatePattern).parse(strDate);
+            } else if (defaultDateTimePattern.length() == strDate.length()) {
+                return new SimpleDateFormat(defaultDateTimePattern).parse(strDate);
+            } else {
+                return new SimpleDateFormat(defaultDatePattern).parse(strDate);
+            }
+        } catch (ParseException e) {
+            try {
+                return new SimpleDateFormat(defaultDateTimePattern).parse(strDate);
+            } catch (ParseException e1) {
+                String msg = "日期格式不正确：" + strDate + ", 只支持:" + defaultDatePattern + " 和 " + defaultDateTimePattern + " 两种格式.";
+                logger.error(msg);
+                appendBuffer(sb, msg);
+                throw new Exception(msg);
+            }
+        }
     }
 
     private long endTimerAndGetSeconds() {
@@ -242,9 +280,9 @@ public class ImportController {
         for (int i = 0; i < 11; i++) {
             Cell head = heads[i];
             if (!headStr.contains(head.getContents()))
-                return validateFailure(sb, "发现未定义的列：" + head.getContents() + ", 标准列头:" + headStr);
-            if (!headArr[i].equals(head.getContents()))
-                return validateFailure(sb, "第" + (i + 1) + "列不是" + headArr[i] + ", 标准列头:" + headStr);
+                return validateFailure(sb, "前11列中，发现未定义的列：" + head.getContents() + ", 标准列头:" + headStr);
+//            if (!headArr[i].equals(head.getContents()))
+//                return validateFailure(sb, "第" + (i + 1) + "列不是" + headArr[i] + ", 标准列头:" + headStr);
         }
 
         return flag;
@@ -259,8 +297,8 @@ public class ImportController {
         sb.append("<br/>\n" + msg);
     }
 
-    private File convertToFIle(MultipartFile file) throws IOException {
-        File convFile = new File(file.getOriginalFilename());
+    private File convertToFIle(MultipartFile file, String fileName) throws IOException {
+        File convFile = new File(fileName);
         file.transferTo(convFile);
         return convFile;
     }

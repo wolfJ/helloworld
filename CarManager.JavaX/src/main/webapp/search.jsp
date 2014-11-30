@@ -32,19 +32,19 @@
 </style>
 
 <script type="text/javascript">
-//    $(function() {
-//        $(".knob").knob();
-//    });
+    //    $(function() {
+    //        $(".knob").knob();
+    //    });
     //=========日期================
     $(function () {
         $("#dengJiRQS").datepicker({
-            changeMonth: true, showButtonPanel: true});
+            changeMonth: true, changeYear: true, showButtonPanel: true});
         $("#dengJiRQE").datepicker({
-            changeMonth: true, showButtonPanel: true});
+            changeMonth: true, changeYear: true, showButtonPanel: true});
         $("#baoXianRQS").datepicker({
-            changeMonth: true, showButtonPanel: true});
+            changeMonth: true, changeYear: true, showButtonPanel: true});
         $("#baoXianRQE").datepicker({
-            changeMonth: true, showButtonPanel: true});
+            changeMonth: true, changeYear: true, showButtonPanel: true});
     });
     //========================datatable==============
     // 表格刷新

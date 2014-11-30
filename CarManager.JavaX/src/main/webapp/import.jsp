@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
+<jsp:include page="link.jsp"/>
 <head>
     <title>导入</title>
 </head>
@@ -33,9 +34,11 @@
     </div>
 
     <div class="main-content">
-        <form id="form" action="/upload.do" target="async" enctype="multipart/form-data" method="post">
+        <form id="form" action="upload.do" target="async" enctype="multipart/form-data" method="post">
+            <input type="hidden" id="fileName" name="fileName">
+
             <p> 选择待导入的xls文件:
-                <input type="file" name="file" id="inputFile" onchange="change(this)" />
+                <input type="file" name="file" id="inputFile" onchange="change(this)" style="width: 500px"/>
             </p>
 
             <p>&nbsp;</p>
@@ -61,6 +64,10 @@
         if (o.value.length > 0) {
             if (o.value.indexOf('.xls') > -1) {
                 fileName = o.value;
+                fileName=  fileName.substr(fileName.lastIndexOf('\\')+1);
+                fileName = encodeURIComponent(fileName);
+                alert(fileName);
+                $("#fileName").val(fileName);
                 return;
             }
             else {
@@ -73,7 +80,7 @@
     }
     function doSubmit() {
         if (fileName != "") {
-            var form = document.getElementById("form")
+            var form = document.getElementById("form");
             form.submit();
             onMessage("正在上传文件，请稍等...");
             disableSubmitBtn(true);

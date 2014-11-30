@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<configuration scan="true" scanPeriod="30 seconds">
+
+    <property scope="context" name="pattern" value="%d{yyyy-MM-dd HH:mm:ss.SSS}|%-5level|%logger{35} - %msg%n"/>
+
+    <property scope="context" name="dbpattern" value="|%d{yyyy-MM-dd HH:mm:ss.SSS}|%msg%n"/>
+
+    <property scope="context" name="dbsrvpattern" value="%msg%n"/>
+
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <Pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</Pattern>
+        </layout>
+    </appender>
+
+    <logger name="org.springframework.core" level="INFO"/>
+
+    <logger name="org.springframework.beans" level="INFO"/>
+
+    <logger name="org.springframework.context" level="INFO"/>
+
+    <logger name="org.springframework.web" level="info"/>
+
+    <root level="INFO">
+        <appender-ref ref="STDOUT"/>
+    </root>
+</configuration>
+
