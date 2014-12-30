@@ -3,6 +3,7 @@
 
 <mapper namespace="org.wolf.carmanager.persist.CarMapper">
 
+    <cache eviction="FIFO" flushInterval="60000" size="512" readOnly="true" />
 
     <sql id="columns">
         id,
@@ -23,7 +24,7 @@
             resultType="org.wolf.carmanager.model.CarPO">
         <bind name="bind_chePai" value="'%' + param.getChePai() + '%'"/>
         <bind name="bind_cheZhu" value="'%' + param.getCheZhu() + '%'"/>
-        <bind name="bind_dianHua" value="'%' + param.getDianHua() + '%'"/>
+        <bind name="bind_dianHua" value="param.getDianHua() + '%'"/>
         <bind name="bind_chePingPai" value="'%' + param.getChePingPai() + '%'"/>
         <bind name="bind_cheXinHao" value="'%' + param.getCheXinHao() + '%'"/>
         <bind name="bind_faDongJi" value="'%' + param.getFaDongJi() + '%'"/>
@@ -36,7 +37,7 @@
         <bind name="bind_baoXianRQE" value="param.getBaoXianRQE() + '  23:59:59'"/>
 
         select * from car where 1=1
-        <if test="param.chePai != null and param.chePai != ''">AND chePai LIKE #{bind_chePai}</if>
+        <if test="param.chePai != null and param.chePai != ''">AND UPPER(chePai) LIKE UPPER(#{bind_chePai})</if>
         <if test="param.cheZhu != null and param.cheZhu != ''">AND cheZhu LIKE #{bind_cheZhu}</if>
         <if test="param.dianHua != null and param.dianHua != ''">AND dianHua LIKE #{bind_dianHua}</if>
         <if test="param.chePingPai != null and param.chePingPai != ''">AND chePingPai LIKE #{bind_chePingPai}</if>
@@ -69,7 +70,7 @@
     <select id="countCars" parameterType="org.wolf.carmanager.PageQueryParam" resultType="int">
         <bind name="bind_chePai" value="'%' + param.getChePai() + '%'"/>
         <bind name="bind_cheZhu" value="'%' + param.getCheZhu() + '%'"/>
-        <bind name="bind_dianHua" value="'%' + param.getDianHua() + '%'"/>
+        <bind name="bind_dianHua" value=" param.getDianHua() + '%'"/>
         <bind name="bind_chePingPai" value="'%' + param.getChePingPai() + '%'"/>
         <bind name="bind_cheXinHao" value="'%' + param.getCheXinHao() + '%'"/>
         <bind name="bind_faDongJi" value="'%' + param.getFaDongJi() + '%'"/>
@@ -82,7 +83,7 @@
         <bind name="bind_baoXianRQE" value="param.getBaoXianRQE() + '  23:59:59'"/>
 
         SELECT COUNT(*) FROM car where 1=1
-        <if test="param.chePai != null and param.chePai != ''">AND chePai LIKE #{bind_chePai}</if>
+        <if test="param.chePai != null and param.chePai != ''">AND UPPER(chePai) LIKE UPPER(#{bind_chePai})</if>
         <if test="param.cheZhu != null and param.cheZhu != ''">AND cheZhu LIKE #{bind_cheZhu}</if>
         <if test="param.dianHua != null and param.dianHua != ''">AND dianHua LIKE #{bind_dianHua}</if>
         <if test="param.chePingPai != null and param.chePingPai != ''">AND chePingPai LIKE #{bind_chePingPai}</if>
