@@ -12,9 +12,9 @@ create table `importlog`(
 drop table if exists `car`;
 create table `car`(
   `id` int(32) not null auto_increment ,
-  `chePai` varchar(100) default null comment '车牌',
+  `chePai` varchar(10) default null comment '车牌',
   `cheZhu` varchar(100) default null comment '车主',
-  `dianHua` varchar(100) default null comment '电话',
+  `dianHua` varchar(13) default null comment '电话',
   `chePingPai` varchar(100) default null comment '车辆品牌',
   `cheXinHao` varchar(100) default null comment '车辆型号',
   `faDongJi` varchar(100) default null comment '发动机',

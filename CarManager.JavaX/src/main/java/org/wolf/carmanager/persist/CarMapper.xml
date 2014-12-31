@@ -22,7 +22,7 @@
 
     <select id="selectCarsOptCP" parameterType="org.wolf.carmanager.PageQueryParam"
             resultType="org.wolf.carmanager.model.CarPO">
-        <bind name="bind_chePai" value="'苏%' + param.getChePai() + '%'"/>
+        <bind name="bind_chePai" value="'苏A' + param.getChePai() + '%'"/>
         <bind name="bind_cheZhu" value="'%' + param.getCheZhu() + '%'"/>
         <bind name="bind_dianHua" value="param.getDianHua() + '%'"/>
         <bind name="bind_chePingPai" value="'%' + param.getChePingPai() + '%'"/>
@@ -130,7 +130,7 @@
         <!--<bind name="bind_baoXianRQS" value="'%' + param.getBaoXianRQS() + '%'"/>-->
         <bind name="bind_baoXianRQE" value="param.getBaoXianRQE() + '  23:59:59'"/>
 
-        SELECT COUNT(*) FROM car where 1=1
+        SELECT COUNT(1) FROM car where id>0
         <if test="param.chePai != null and param.chePai != ''">AND chePai LIKE #{bind_chePai}</if>
         <if test="param.cheZhu != null and param.cheZhu != ''">AND cheZhu LIKE #{bind_cheZhu}</if>
         <if test="param.dianHua != null and param.dianHua != ''">AND dianHua LIKE #{bind_dianHua}</if>

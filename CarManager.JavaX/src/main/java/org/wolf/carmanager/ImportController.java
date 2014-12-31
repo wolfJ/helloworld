@@ -218,13 +218,13 @@ public class ImportController {
                         po.setCheXinHao(cells[j].getContents());
                     } else if ("电话".equals(heads[j].getContents())) {
                         po.setDianHua(cells[j].getContents());
-                    } else if ("发动机号".equals(heads[j].getContents())) {
+                    } else if ("发动机号".equals(heads[j].getContents()) || "发动机".equals(heads[j].getContents())) {
                         po.setFaDongJi(cells[j].getContents());
                     } else if ("车架号".equals(heads[j].getContents())) {
                         po.setCheJiaHao(cells[j].getContents());
                     } else if ("车辆品牌".equals(heads[j].getContents())) {
                         po.setChePingPai(cells[j].getContents());
-                    } else if ("身份证号".equals(heads[j].getContents())) {
+                    } else if ("身份证号".equals(heads[j].getContents()) || "身份证".equals(heads[j].getContents())) {
                         po.setShenFengZheng(cells[j].getContents());
                     } else if ("地址".equals(heads[j].getContents())) {
                         po.setDiZhi(cells[j].getContents());
