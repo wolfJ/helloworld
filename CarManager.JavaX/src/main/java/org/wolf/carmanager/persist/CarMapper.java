@@ -8,7 +8,9 @@ import java.util.List;
 
 public interface CarMapper {
 
-    List<CarPO> selectCars(PageQueryParam<CarForm> propertyPageQueryParam);
+    List<CarPO> selectCarsOptCP(PageQueryParam<CarForm> propertyPageQueryParam);
+
+    List<CarPO> selectCarsNormal(PageQueryParam<CarForm> propertyPageQueryParam);
 
     int countCars(PageQueryParam<CarForm> propertyPageQueryParam);
 

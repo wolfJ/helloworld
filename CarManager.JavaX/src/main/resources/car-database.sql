@@ -30,3 +30,6 @@ create table `car`(
   `bakD` varchar(100) default null comment 'bak_d',
   primary key (`id`)
 ) engine=InnoDB default charset = utf8;
+
+alter table `car` add index car_cp_index(`chepai`);
+alter table `car` add index car_dh_index(`dianhua`);

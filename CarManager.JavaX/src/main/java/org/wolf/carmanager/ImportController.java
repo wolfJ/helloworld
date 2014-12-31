@@ -75,11 +75,30 @@ public class ImportController {
     String queryx(CarForm form, HttpServletRequest req, HttpServletResponse reps) {
         PageQueryResult result = new PageQueryResult();
         try {
-            logger.info("do queryx.do...");
             PageQueryParam<CarForm> param = new PageQueryParam<CarForm>(form, form.getiDisplayStart(), form.getiDisplayLength());
             List<CarPO> list = new ArrayList<CarPO>();
-            list = this.mapper.selectCars(param);
-            int totalCount = this.mapper.countCars(param);
+            if(!StringUtils.isEmpty(param.getParam().chePai)){
+                param.getParam().chePai = param.getParam().chePai.toUpperCase();
+            }
+            startTimer();
+            list = this.mapper.selectCarsOptCP(param);
+            logger.info("selectCarsOptCP:{}, time:{}ms",param.getParam().chePai,endTimerAndGetMills());
+            if(!StringUtils.isEmpty(param.getParam().chePai) && (list==null || list.isEmpty()) ) {
+                startTimer();
+                list = this.mapper.selectCarsNormal(param);
+                logger.info("selectCarsNormal:{}, time:{}ms",param.getParam().chePai,endTimerAndGetMills());
+            }
+            int totalCount ;
+            if(!StringUtils.isEmpty(param.getParam().chePai)
+                    || !StringUtils.isEmpty(param.getParam().dianHua)
+                    ||!StringUtils.isEmpty(param.getParam().faDongJi)
+                    ||!StringUtils.isEmpty(param.getParam().shenFengZheng) ){
+                totalCount = 10;
+            }else{
+                startTimer();
+                totalCount = this.mapper.countCars(param);
+                logger.info("countCars, time:{}ms",endTimerAndGetMills());
+            }
             result.setData(list);
             result.setDraw(form.getiDisplayStart());
             result.setiTotalDisplayRecords(totalCount);
@@ -192,7 +211,7 @@ public class ImportController {
                 //车牌,车主,车辆型号,电话,发动机号,车架号,登记日期,车辆品牌,身份证号,保险到期,地址
                 for (int j = 0; j < cells.length; j++) {
                     if ("车牌".equals(heads[j].getContents())) {
-                        po.setChePai(cells[j].getContents());
+                        po.setChePai(cells[j].getContents().toUpperCase());
                     } else if ("车主".equals(heads[j].getContents())) {
                         po.setCheZhu(cells[j].getContents());
                     } else if ("车辆型号".equals(heads[j].getContents())) {
@@ -261,6 +280,12 @@ public class ImportController {
             start = new Date();
         end = new Date();
         return (end.getTime() - start.getTime()) / 1000;
+    }
+    private long endTimerAndGetMills() {
+        if (start == null)
+            start = new Date();
+        end = new Date();
+        return (end.getTime() - start.getTime());
     }
 
     private void startTimer() {
